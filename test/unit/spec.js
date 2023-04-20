@@ -15,7 +15,8 @@ var spec = {
     'structure',
     'transform',
     'version',
-    'vertex'
+    'vertex',
+    'p5.generative'
   ],
   data: ['p5.TypedDict', 'local_storage'],
   dom: ['dom'],
