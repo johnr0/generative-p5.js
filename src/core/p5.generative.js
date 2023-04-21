@@ -13,7 +13,7 @@ import p5 from './main';
  * @method arc
  * @param  {String} endpoint        the url of the ML endpoint
  * @param  {p5.Graphics} g          the graphics object from which we will draw the source image
- * @param  {Object} target          the dictionary about the target. should contain target object to draw the generated image to, x and y position about where to draw the image 
+ * @param  {Object} target          the dictionary about the target. should contain target object to draw the generated image to, x and y position about where to draw the image
  * @param  {String} prompt          prompt to specify the generation
  * @param  {String} negative_prompt negative prompt to specify the generation
  * @param  {Number} strength        strength of the img2img
@@ -63,19 +63,16 @@ p5.prototype.generate = async function(endpoint, g, target, prompt, negative_pro
   var img = new Image();
   img.src = data['img'];
   await img.decode();
-  g.clear()
+  g.clear();
   g.canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height,0, 0, g.width, g.height);
   if(target!==undefined){
     try{
-        await target['target'].image(g, target['x'], target['y'], target['width'], target['height']);
-        
+      await target['target'].image(g, target['x'], target['y'], target['width'], target['height']);
+    } catch(error){
+      console.log('target is not fully specified.');
     }
-    catch{
-        console.log('target is not fully specified.');
-    }
-    if(export_frame!=undefined){
-        console.log('exporting?')
-        target['target'].saveCanvas(target['target'].canvas, str(export_frame), '.png');
+    if(export_frame!==undefined){
+      target['target'].saveCanvas(target['target'].canvas, str(export_frame), '.png');
     }
   }
   return g;
