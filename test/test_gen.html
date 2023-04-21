@@ -2,78 +2,39 @@
   <head>
     <script src="../lib/p5-test.js"></script>
     <script>
-            
       let rad = 60; // Width of the shape
       let xpos, ypos; // Starting position of shape
-      let framerate = 1/10
-      let xspeed = 8/framerate; // Speed of the shape
-      let yspeed = 6/framerate; // Speed of the shape
-      let vspeed = 1/framerate
-      let xdirection = 1; // Left or Right
-      let ydirection = 1; // Top to Bottom
-      
-      let endpoint = 'http://546c-34-126-188-249.ngrok-free.app'
+      let framerate = 30;
+      let slowdown = 150;
+      let totframes = 120
+      let endpoint = 'http://390e-34-87-29-73.ngrok-free.app'
       let time = 0
-
       function setup() {
-        createCanvas(rad*8, rad*8);
+        createCanvas(512, 512);
         noStroke();
-        frameRate(framerate);
+        frameRate(framerate/slowdown);
         ellipseMode(RADIUS);
-        // Set the starting position of the shape
         xpos = width / 2;
         ypos = height / 2;
-        
-        pg = createGraphics(rad*2, rad*2);
-        pg2 = createGraphics(rad*4, rad*4);
-        pg3 = createGraphics(rad*8, rad*8);
-        
+        pg = createGraphics(512, 512);
+        pg.fill(color(0, 255, 255))
+        pg.noStroke()
       }
-
       async function draw() {
-        background(0);
-        time += 1
-        // Update the position of the shape
-        xpos = xpos + xspeed * xdirection;
-        ypos = ypos + yspeed * ydirection;
-
-        // Test to see if the shape exceeds the boundaries of the screen
-        // If it does, reverse its direction by multiplying by -1
-        if (xpos > width - 6* rad  || xpos < -2*rad) {
-          xdirection *= -1;
-        }
-        if (ypos > height -6 * rad || ypos < -2*rad) {
-          ydirection *= -1;
-        }
-        // Draw the shape
+        background(255);
+        
+        width = 256+ time/totframes*256
+        var weight = time/totframes
+        if(weight>1){weight=1}
         pg.clear()
-        pg.fill(color(255, 0, 0))
-        pg.ellipse(rad, rad, rad*2, rad*2)
-        pg2.clear()
-        pg2.fill(color(0,180,180))
-        pg2.ellipse(rad*2, rad*2, rad*4, rad*4)
-        console.log('pre gen')
-        
-        image(pg2, 2*rad, 2*rad+rad*Math.cos(time*vspeed))
-        image(pg, 3*rad+rad*Math.sin(time*vspeed), 3*rad)
-        
-        
-
-        pg3.clear()
-        // pg3.image(pg2, 2*rad, 2*rad+rad/2*Math.cos(time*vspeed))
-        // pg3.image(pg, 3*rad+rad*Math.sin(time*vspeed), 3*rad)
-        
-        await generate(endpoint, pg2, {'target':this, 'x': 2*rad, 'y':2*rad+rad*Math.cos(time*vspeed)}, 'a photograph of a star shaped cup cake viewed from above, 4k, aesthetic, high quality', negative_prompt='low quality, blurry', prompt_weights=[], negative_prompt_weights=[], strength=0.8, cfg=12, sampler='DDIM', seed=undefined, steps=16)
-        console.log('gen1 done')
-        await generate(endpoint, pg, {'target':this, 'x': 3*rad+rad*Math.sin(time*vspeed), 'y':3*rad}, 'a photograph of red baseball, 4k, aesthetic, high quality', negative_prompt='low quality, blurry', prompt_weights=[], negative_prompt_weights=[], strength=0.8, cfg=12, sampler='DDIM', seed=99, steps=16)
-        console.log('gen2 done')
-        // await generate(endpoint, pg3, {'target':this, 'x': 0, 'y':0}, 'a blue eye and red pupil with matte texture, 4k, aesthetic, high quality', negative_prompt='low quality, blurry', prompt_weights=[], negative_prompt_weights=[], strength=0.4, cfg=12, sampler='DDIM', seed=undefined, steps=32)
-        // console.log('gen3 done')
-        // image(pg3, xpos, ypos)
-        // image(pg, xpos, ypos);
-        // ellipse(xpos+rad, ypos+rad, rad, rad);
+        pg.ellipse(256, 256, 512, 512)
+        translate(256, 256);
+        rotate(time/totframes*2*PI)
+        translate(-256, -256);
+        // image(pg, 256-width/2, 256-width/2, width, width)
+        await generate(endpoint, pg, {'target':this, 'x': 256-width/2, 'y':256-width/2, 'width': width, 'height': width}, ['a photograph of a cyan cup cake, 4k, aesthetic, high quality', 'a photograph of a cyan eyeball with clear pupil, 4k, grotesque, aesthetic, high quality'], negative_prompt=['low quality, blurry'], prompt_weights=[1-weight, weight], negative_prompt_weights=[1], strength=0.9, cfg=12, sampler='DDIM', seed=99, steps=16, export_frame='test'+str(time))
+        time += 1
       }
-
     </script>
   </head>
   <body>
