@@ -57,16 +57,14 @@ p5.prototype.generate = async function(pInst, endpoint, g, target, prompt, negat
       'cfg': cfg,
       'seed': seed,
       'steps': steps,
-      'segment': segment,
+      'segment': segment
     })
   });
   var data = await response.json();
-  console.log('1')
   var img = new Image();
   img.src = data['img'];
   await img.decode();
-  var new_gp
-  new_gp = await new p5.Graphics(g.width, g.height, constants.P2D, pInst);
+  var new_gp = await new p5.Graphics(g.width, g.height, constants.P2D, pInst);
   new_gp.canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height, 0, 0, g.width, g.height);
   if(target!==undefined){
     try{
@@ -75,7 +73,7 @@ p5.prototype.generate = async function(pInst, endpoint, g, target, prompt, negat
       console.log('target is not fully specified.');
     }
     if(export_frame!==undefined){
-    target['target'].saveCanvas(target['target'].canvas, str(export_frame), '.png');
+      target['target'].saveCanvas(target['target'].canvas, str(export_frame), '.png');
     }
   }
   return g;
