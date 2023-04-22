@@ -7,7 +7,7 @@
       let framerate = 30;
       let slowdown = 150;
       let totframes = 120
-      let endpoint = 'http://390e-34-87-29-73.ngrok-free.app'
+      let endpoint = 'http://4529-35-240-144-196.ngrok-free.app'
       let time = 0
       function setup() {
         createCanvas(512, 512);
@@ -31,8 +31,7 @@
         translate(256, 256);
         rotate(time/totframes*2*PI)
         translate(-256, -256);
-        // image(pg, 256-width/2, 256-width/2, width, width)
-        await generate(endpoint, pg, {'target':this, 'x': 256-width/2, 'y':256-width/2, 'width': width, 'height': width}, ['a photograph of a cyan cup cake, 4k, aesthetic, high quality', 'a photograph of a cyan eyeball with clear pupil, 4k, grotesque, aesthetic, high quality'], negative_prompt=['low quality, blurry'], prompt_weights=[1-weight, weight], negative_prompt_weights=[1], strength=0.9, cfg=12, sampler='DDIM', seed=99, steps=16, export_frame='test'+str(time))
+        await generate(this, endpoint, pg, {'target':this, 'x': 256-width/2, 'y':256-width/2, 'width': width, 'height': width}, ['a photograph of a cyan cup cake, 4k, aesthetic, high quality', 'a photograph of a cyan eyeball with clear pupil, 4k, grotesque, aesthetic, high quality'], negative_prompt=['low quality, blurry'], prompt_weights=[1-weight, weight], negative_prompt_weights=[1], strength=0.9, cfg=12, sampler='DDIM', seed=99, steps=16, export_frame='test'+str(time))
         time += 1
       }
     </script>

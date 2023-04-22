@@ -5,7 +5,7 @@
  */
 
 import p5 from './main';
-
+import * as constants from './constants';
 
 /**
  * TODO: add description
@@ -28,7 +28,7 @@ import p5 from './main';
  * @example
  * TODO: add descriptions
 **/
-p5.prototype.generate = async function(endpoint, g, target, prompt, negative_prompt='', prompt_weights=[], negative_prompt_weights=[], strength=0.7, cfg=7.5, sampler='DDIM', seed=undefined, steps=16, export_frame=undefined) {
+p5.prototype.generate = async function(pInst, endpoint, g, target, prompt, negative_prompt='', prompt_weights=[], negative_prompt_weights=[], strength=0.7, cfg=7.5, sampler='DDIM', seed=undefined, steps=16, segment=true, export_frame=undefined) {
   var offscreenCanvas = document.createElement('canvas');
   offscreenCanvas.width = g.canvas.width;
   offscreenCanvas.height = g.canvas.height;
@@ -56,23 +56,26 @@ p5.prototype.generate = async function(endpoint, g, target, prompt, negative_pro
       'strength': strength,
       'cfg': cfg,
       'seed': seed,
-      'steps': steps
+      'steps': steps,
+      'segment': segment,
     })
   });
   var data = await response.json();
+  console.log('1')
   var img = new Image();
   img.src = data['img'];
   await img.decode();
-  g.clear();
-  g.canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height,0, 0, g.width, g.height);
+  var new_gp
+  new_gp = await new p5.Graphics(g.width, g.height, constants.P2D, pInst);
+  new_gp.canvas.getContext('2d').drawImage(img, 0, 0, img.width, img.height, 0, 0, g.width, g.height);
   if(target!==undefined){
     try{
-      await target['target'].image(g, target['x'], target['y'], target['width'], target['height']);
+      await target['target'].image(new_gp, target['x'], target['y'], target['width'], target['height']);
     } catch(error){
       console.log('target is not fully specified.');
     }
     if(export_frame!==undefined){
-      target['target'].saveCanvas(target['target'].canvas, str(export_frame), '.png');
+    target['target'].saveCanvas(target['target'].canvas, str(export_frame), '.png');
     }
   }
   return g;
