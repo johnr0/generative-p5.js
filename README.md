@@ -67,8 +67,7 @@ Generate function takes four six arguments.
 - `export_frame`: The name of the file you will use for exporting each frame. For now, each frame will be saved as `png`. 
 
 
-
-Generation function is now a one line function, 
+For more details on how to use it in javascript, please refer to `test_gen_*.html` files in the `test` directory!
 
 
 [![npm version](https://badge.fury.io/js/p5.svg)](https://www.npmjs.com/package/p5)
