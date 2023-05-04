@@ -14,7 +14,7 @@ The below is for testing, might need to be updated if we want to deploy it to pu
 
 ### Running ML server
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)][https://colab.research.google.com/github/johnr0/generative-p5.js/blob/main/Generative_p5.ipynb] Run Generative_p5.ipynb. Note that you should put your own ngrok authtoken. 
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/johnr0/generative-p5.js/blob/main/Generative_p5.ipynb) Run Generative_p5.ipynb. Note that you should put your own ngrok authtoken. 
 
 Recommend to run with a high memory instance. 
 
