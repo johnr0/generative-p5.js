@@ -42,7 +42,7 @@ Fifth, you can render vanilla p5 graphics either on an graphics elements or the 
 
 Sixth, you can run the AI generation function by running `generate` funciton. When calling the function, call it with `await` to run it asynchronously.
 
-Generate function takes four five arguments.
+Generate function takes four six arguments.
 
 - `pInst` - p5 instantiation. Usually, pass `this` for this variable. 
 - `endpoint` - endpoint to your deployed ML server. Copy the url from the above ML server. 
