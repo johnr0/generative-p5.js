@@ -1,3 +1,76 @@
+# Generative p5.js
+
+This is a repo for generative p5.js. That is, we added image generation function into p5.js environment, so that you can use them flexibly. 
+
+## Building p5 js file
+
+At the top directory of the repo, run `npm run build`.
+
+You might need to install required packages by running `npm install`. 
+
+## Running p5 js
+
+The below is for testing, might need to be updated if we want to deploy it to public. 
+
+### Running ML server
+
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)][https://colab.research.google.com/github/johnr0/generative-p5.js/blob/main/Generative_p5.ipynb] Run Generative_p5.ipynb. Note that you should put your own ngrok authtoken. 
+
+Recommend to run with a high memory instance. 
+
+### Running p5 in the browser (for testing)
+
+First, in the top directory, run `http-server` to run a very simple server to host html files in local host. 
+
+Second, in the `test` directory, you can try to add some test html files to test-run generative p5.js. You can try to take a look at one of the `test_gen_*.html` files for an example. 
+
+Third, to use the built p5 file, you would need to include the generated `p5-test.js` script into your html.
+
+```
+<script src="../lib/p5-test.js"></script>
+```
+
+Fourth, your `draw()` function should be defined as an async function. 
+
+```
+async function draw() {
+  ...
+}
+```
+
+Fifth, you can render vanilla p5 graphics either on an graphics elements or the canvas itself.
+
+Sixth, you can run the AI generation function by running `generate` funciton. When calling the function, call it with `await` to run it asynchronously.
+
+Generate function takes four five arguments.
+
+- `pInst` - p5 instantiation. Usually, pass `this` for this variable. 
+- `endpoint` - endpoint to your deployed ML server. Copy the url from the above ML server. 
+- `g` - Graphics of p5 instantiation, from which you will take the drawn image. 
+- `gen_parameters` - parameters related to the generation pipeline. It should be passed as a dictionary, and below are sub-parameters. 
+  - `prompt`: The prompt that you will use. It can be either a single string or a list of strings. (default: `''`)
+  - `negative_prompt`: The prompt that you will use as negative prompts. It can be either a single string or a list of strings. (default: `''`)
+  - `prompt_weights`: When there are multiple prompts for `prompt` variable, you can pass weights to control weights with float values. Match the number of prompts to the number of weight variables. (default: `[]`)
+  - `negative_prompt_weights`: When there are multiple prompts for `negative_prompt` variable, you can pass weights to control weights with float values. Match the number of prompts to the number of weight variables. (default: `[]`)
+  - `strength`: When using Img2Img, you can specify the strength in a float value between 0 to 1. If you do not want to do Img2Img, do not specify this value. (default: `undefined`)
+  - `cfg`: This is a variable that decides the how closely the generated image would follow the specified prompt. (default: `7.5`)
+  - `pipe`: When you want to use controlNet, pass controlNet name. Currently supported controlNet models are ``
+  - `segment`: Whether or not to segment the result. If this is not passed, the generated image would have background. (default: `false`)
+  - `is_animation`: To generate frame consistent animation, set this value to `true`. When generating animation, please note about `is_first_frame` below. (default: `false`)
+  - `is_first_frame`: When `is_animation` is set to true, the first frame should be indicated to the `generate` function. (default: `fault`)
+- `target` - information about how the generated results will be applied to the p5 canvas. (all sub-variables need to be specified)
+  - `target`: It should be either Graphics object or the p5 instantiation where you will draw the generated image on. 
+  - `x`: x position of where you will draw the generated image. It is the distance from the left edge.
+  - `y`: y position of where you will draw the generated image. It is the distance from the top edge.
+  - `width`: Width of the generated image.
+  - `height`: Height of the generated image. 
+- `export_frame`: The name of the file you will use for exporting each frame. For now, each frame will be saved as `png`. 
+
+
+
+Generation function is now a one line function, 
+
+
 [![npm version](https://badge.fury.io/js/p5.svg)](https://www.npmjs.com/package/p5)
 
 # [p5.js](https://p5js.org)

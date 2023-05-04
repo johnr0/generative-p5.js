@@ -2,20 +2,13 @@
   <head>
     <script src="../lib/p5-test.js"></script>
     <script>
-      let rad = 60; // Width of the shape
-      let xpos, ypos; // Starting position of shape
-      let framerate = 30;
-      let slowdown = 150;
       let totframes = 120
-      let endpoint = 'http://4529-35-240-144-196.ngrok-free.app'
+      let endpoint = '[endpoint]'
       let time = 0
       function setup() {
         createCanvas(512, 512);
         noStroke();
-        frameRate(framerate/slowdown);
-        ellipseMode(RADIUS);
-        xpos = width / 2;
-        ypos = height / 2;
+        frameRate(30);
         pg = createGraphics(512, 512);
         pg.fill(color(0, 255, 255))
         pg.noStroke()
@@ -23,7 +16,7 @@
       async function draw() {
         background(255);
         
-        width = 256+ time/totframes*256
+        var width = 256+ time/totframes*256
         var weight = time/totframes
         if(weight>1){weight=1}
         pg.clear()
@@ -31,7 +24,21 @@
         translate(256, 256);
         rotate(time/totframes*2*PI)
         translate(-256, -256);
-        await generate(this, endpoint, pg, {'target':this, 'x': 256-width/2, 'y':256-width/2, 'width': width, 'height': width}, ['a photograph of a cyan cup cake, 4k, aesthetic, high quality', 'a photograph of a cyan eyeball with clear pupil, 4k, grotesque, aesthetic, high quality'], negative_prompt=['low quality, blurry'], prompt_weights=[1-weight, weight], negative_prompt_weights=[1], strength=0.9, cfg=12, sampler='DDIM', seed=99, steps=16, export_frame='test'+str(time))
+
+        // Generate the image
+        await generate(this, endpoint, pg, 
+          {
+            prompt: ['a photograph of a cyan cup cake, 4k, aesthetic, high quality', 'a photograph of a cyan eyeball with clear pupil, 4k, grotesque, aesthetic, high quality'],
+            negative_prompt: ['low quality, blurry'],
+            prompt_weights: [1-weight, weight],
+            negative_prompt_weights: [1],
+            strength: 0.9, 
+            cfg: 12,
+            seed: 99
+          },
+          {'target':this, 'x': 256-width/2, 'y':256-width/2, 'width': width, 'height': width}, 
+          export_frame='test'+str(time)
+        )
         time += 1
       }
     </script>

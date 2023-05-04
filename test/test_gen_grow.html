@@ -2,35 +2,52 @@
   <head>
     <script src="../lib/p5-test.js"></script>
     <script>
-      let rad = 60; // Width of the shape
-      let xpos, ypos; // Starting position of shape
       let framerate = 30;
-      let slowdown = 150;
-      let totframes = 120
-      let endpoint = 'http://4529-35-240-144-196.ngrok-free.app'
+      let endpoint = '[endpoint]'
       let time = 0
       function setup() {
         createCanvas(512, 512);
         noStroke();
-        frameRate(framerate/slowdown);
-        ellipseMode(RADIUS);
-        xpos = width / 2;
-        ypos = height / 2;
+        frameRate(30);
         pg = createGraphics(512, 512);
         pg.fill(color(102, 58, 40))
+        
         pg.noStroke()
       }
+
+      // DO NOT FORGET TO ADD THE AWAIT KEYWORD
       async function draw() {
+        // draw bars
         background(255);
-        
         pg.clear()
         pg.rect(100, 260-time*2, 30, 512-260+time*2)
         pg.rect(160, 300-time*2, 30, 512-300+time*2)
         pg.rect(220, 350-time*2, 30, 512-350+time*2)
         pg.rect(280, 330-time*2, 30, 512-330+time*2)
         pg.rect(340, 280-time*2, 30, 512-280+time*2)
-        // image(pg, 0,0)
-        await generate(this, endpoint, pg, {'target':this, 'x': 0, 'y':0, 'width': 512, 'height': 512}, 'a series of long vertical tree trunks in grotesque oil painting in a white background, aesthetic, high quality', negative_prompt='low quality, blurry', prompt_weights=[], negative_prompt_weights=[], strength=0.8, cfg=12, sampler='DDIM', seed=19, steps=16)
+        
+        // Check if this is the first frame or not
+        if(time == 0 ){
+          is_first_frame = true
+        } else {
+          is_first_frame = false
+        }
+
+        // Draw the vanilla p5 image
+        // image(pg, 0, 0)
+        
+        // Generate the image
+        await generate(this, endpoint, pg, 
+          {
+            prompt: 'a series of long vertical tree trunks in grotesque oil painting in a white background, aesthetic, high quality', 
+            negative_prompt: 'low quality, blurry', 
+            cfg: 12, 
+            pipe: 'controlnet_canny', 
+            seed: 19, 
+            is_first_frame: is_first_frame,
+            is_animation: true,
+          },
+          {'target':this, 'x': 0, 'y':0, 'width': 512, 'height': 512})
         time += 1
       }
     </script>

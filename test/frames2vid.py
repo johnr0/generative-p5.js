@@ -2,7 +2,7 @@ from moviepy.editor import ImageSequenceClip
 import os
 
 # Set the directory where the image files are stored
-image_dir = "./test_results/04212023_2"
+image_dir = "./test_results/basegrow"
 
 # Load the image files into a list
 files = os.listdir(image_dir)

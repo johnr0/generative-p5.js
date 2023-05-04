@@ -371,52 +371,89 @@ class p5 {
       }
     };
 
-    this._draw = () => {
-      const now = window.performance.now();
-      const time_since_last = now - this._lastTargetFrameTime;
-      const target_time_between_frames = 1000 / this._targetFrameRate;
+    this._draw = async () => {
+        if(this._targetFrameRate!==0){
+          const now = window.performance.now();
+        const time_since_last = now - this._lastTargetFrameTime;
+        const target_time_between_frames = 1000 / this._targetFrameRate;
 
-      // only draw if we really need to; don't overextend the browser.
-      // draw if we're within 5ms of when our next frame should paint
-      // (this will prevent us from giving up opportunities to draw
-      // again when it's really about time for us to do so). fixes an
-      // issue where the frameRate is too low if our refresh loop isn't
-      // in sync with the browser. note that we have to draw once even
-      // if looping is off, so we bypass the time delay if that
-      // is the case.
-      const epsilon = 5;
-      if (
-        !this._loop ||
-        time_since_last >= target_time_between_frames - epsilon
-      ) {
-        //mandatory update values(matrixes and stack)
-        this.deltaTime = now - this._lastRealFrameTime;
-        this._setProperty('deltaTime', this.deltaTime);
-        this._frameRate = 1000.0 / this.deltaTime;
-        this.redraw();
-        this._lastTargetFrameTime = Math.max(this._lastTargetFrameTime
-          + target_time_between_frames, now);
-        this._lastRealFrameTime = now;
+        // only draw if we really need to; don't overextend the browser.
+        // draw if we're within 5ms of when our next frame should paint
+        // (this will prevent us from giving up opportunities to draw
+        // again when it's really about time for us to do so). fixes an
+        // issue where the frameRate is too low if our refresh loop isn't
+        // in sync with the browser. note that we have to draw once even
+        // if looping is off, so we bypass the time delay if that
+        // is the case.
+        const epsilon = 5;
+        if (
+          !this._loop ||
+          time_since_last >= target_time_between_frames - epsilon
+        ) {
+          //mandatory update values(matrixes and stack)
+          this.deltaTime = now - this._lastRealFrameTime;
+          this._setProperty('deltaTime', this.deltaTime);
+          this._frameRate = 1000.0 / this.deltaTime;
+          await this.redraw();
+          this._lastTargetFrameTime = Math.max(this._lastTargetFrameTime
+            + target_time_between_frames, now);
+          this._lastRealFrameTime = now;
 
-        // If the user is actually using mouse module, then update
-        // coordinates, otherwise skip. We can test this by simply
-        // checking if any of the mouse functions are available or not.
-        // NOTE : This reflects only in complete build or modular build.
-        if (typeof this._updateMouseCoords !== 'undefined') {
-          this._updateMouseCoords();
+          // If the user is actually using mouse module, then update
+          // coordinates, otherwise skip. We can test this by simply
+          // checking if any of the mouse functions are available or not.
+          // NOTE : This reflects only in complete build or modular build.
+          if (typeof this._updateMouseCoords !== 'undefined') {
+            this._updateMouseCoords();
 
-          //reset delta values so they reset even if there is no mouse event to set them
-          // for example if the mouse is outside the screen
-          this._setProperty('movedX', 0);
-          this._setProperty('movedY', 0);
+            //reset delta values so they reset even if there is no mouse event to set them
+            // for example if the mouse is outside the screen
+            this._setProperty('movedX', 0);
+            this._setProperty('movedY', 0);
+          }
+
+          // get notified the next time the browser gives us
+          // an opportunity to draw.
+          if (this._loop) {
+            this._requestAnimId = window.requestAnimationFrame(this._draw);
+          }
+        }else{
+          // get notified the next time the browser gives us
+          // an opportunity to draw.
+          if (this._loop) {
+            this._requestAnimId = window.requestAnimationFrame(this._draw);
+          }
+        }
+
+        
+      }else{
+          //mandatory update values(matrixes and stack)
+          // this.deltaTime = now - this._lastRealFrameTime;
+          // this._setProperty('deltaTime', this.deltaTime);
+          // this._frameRate = 1000.0 / this.deltaTime;
+          await this.redraw();
+          // this._lastTargetFrameTime = Math.max(this._lastTargetFrameTime
+          //   + target_time_between_frames, now);
+          // this._lastRealFrameTime = now;
+
+          // If the user is actually using mouse module, then update
+          // coordinates, otherwise skip. We can test this by simply
+          // checking if any of the mouse functions are available or not.
+          // NOTE : This reflects only in complete build or modular build.
+          if (typeof this._updateMouseCoords !== 'undefined') {
+            this._updateMouseCoords();
+
+            //reset delta values so they reset even if there is no mouse event to set them
+            // for example if the mouse is outside the screen
+            this._setProperty('movedX', 0);
+            this._setProperty('movedY', 0);
+          }
+
+        if (this._loop) {
+          this._requestAnimId = window.requestAnimationFrame(this._draw);
         }
       }
-
-      // get notified the next time the browser gives us
-      // an opportunity to draw.
-      if (this._loop) {
-        this._requestAnimId = window.requestAnimationFrame(this._draw);
-      }
+      
     };
 
     this._setProperty = (prop, value) => {

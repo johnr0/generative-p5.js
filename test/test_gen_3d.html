@@ -3,22 +3,18 @@
     <script src="../lib/p5-test.js"></script>
     <script>
       let angle = 0;
-      let durl = 0;
-      let framerate = 30;
-      let slowdown = 150;
-      let endpoint = 'http://fbc6-35-240-144-196.ngrok-free.app'
-      time = 0
+      let endpoint = '[endpoint]'
+      let time = 0
       function setup() {
-        frameRate(framerate/slowdown)
+        frameRate(30)
         createCanvas(512, 512, WEBGL);
         pg = createGraphics(512, 512, WEBGL)
       }
 
       async function draw() {
         time = time +1
-        background(255);
+        // background(255);
         
-        // pg.push();
         pg.clear();
         pg.normalMaterial();
         pg.box(100);
@@ -28,9 +24,25 @@
         
         
         angle = angle +0.01;
+        // Draw the vanilla p5 image
+        // background(255);
         // image(pg, -255,-255)
-        await generate(this, endpoint, pg, {'target':this, 'x': -256, 'y':-256, 'width': 512, 'height': 512}, 'a colorful rising fire on a cube', negative_prompt='low quality, blurry', prompt_weights=[], negative_prompt_weights=[], strength=0.8, cfg=12, sampler='DDIM', seed=87, steps=16, segment=false,)
-        fill(255);
+
+        // Generate the image
+        await generate(this, endpoint, pg, 
+          {
+            prompt: 'a spinning glass cube on exploding fire, in matte textured 3d unreal rendering, 4k, in the white background',
+            negative_prompt: 'deformed, ugly, boring, low resolution, lowres, blurry',
+            cfg: 12, 
+            pipe: 'controlnet_scribble',
+            seed: 87, 
+            steps: 16,
+            strength:0.9,
+            is_animation: true,
+            is_first_frame: time==1,
+          },
+          {'target':this, 'x': -256, 'y':-256, 'width': 512, 'height': 512})
+        // fill(255);
       }
     </script>
   </head>

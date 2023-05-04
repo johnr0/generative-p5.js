@@ -456,7 +456,7 @@ p5.prototype.pop = function() {
  * black line on far left of canvas
  * black line on far left of canvas
  */
-p5.prototype.redraw = function(n) {
+p5.prototype.redraw = async function(n) {
   if (this._inUserDraw || !this._setupDone) {
     return;
   }
@@ -486,7 +486,7 @@ p5.prototype.redraw = function(n) {
       context._registeredMethods.pre.forEach(callMethod);
       this._inUserDraw = true;
       try {
-        context.draw();
+        await context.draw();
       } finally {
         this._inUserDraw = false;
       }

@@ -28,7 +28,7 @@ import * as constants from './constants';
  * @example
  * TODO: add descriptions
 **/
-p5.prototype.generate = async function(pInst, endpoint, g, target, prompt, negative_prompt='', prompt_weights=[], negative_prompt_weights=[], strength=0.7, cfg=7.5, sampler='DDIM', seed=undefined, steps=16, segment=true, export_frame=undefined) {
+p5.prototype.generate = async function(pInst, endpoint, g, gen_parameters, target, export_frame=undefined) {
   var offscreenCanvas = document.createElement('canvas');
   offscreenCanvas.width = g.canvas.width;
   offscreenCanvas.height = g.canvas.height;
@@ -40,15 +40,77 @@ p5.prototype.generate = async function(pInst, endpoint, g, target, prompt, negat
   if (typeof negative_prompt == 'string'){
     negative_prompt = [negative_prompt];
   }
+  
   const imgdata = offscreenCanvas.toDataURL('image/png');
   console.log(imgdata);
-  var response = await fetch(endpoint+'/img2img', {
+
+  var is_first_frame = false
+  if(gen_parameters['is_first_frame']!==undefined){
+    is_first_frame = gen_parameters['is_first_frame'];
+  }
+  var is_animation = false
+  if(gen_parameters['is_animation']!==undefined){
+    is_animation = gen_parameters['is_animation'];
+  }
+  if(is_first_frame){
+    pInst.first_frame = imgdata;
+  }
+  var first_frame = undefined
+  if(is_animation && pInst.first_frame!==undefined){
+    first_frame = pInst.first_frame;
+  }
+  console.log(first_frame)
+  var prompt = ''
+  if(gen_parameters['prompt']!==undefined){
+    prompt = gen_parameters['prompt'];
+  }
+  var negative_prompt = ''
+  if(gen_parameters['negative_prompt']!==undefined){
+    negative_prompt = gen_parameters['negative_prompt'];
+  }
+  var prompt_weights = []
+  if(gen_parameters['prompt_weights']!==undefined){
+    prompt_weights = gen_parameters['prompt_weights'];
+  }
+  var negative_prompt_weights = []
+  if(gen_parameters['negative_prompt_weights']!==undefined){
+    negative_prompt_weights = gen_parameters['negative_prompt_weights'];
+  }
+  var strength = undefined
+  if(gen_parameters['strength']!==undefined){
+    strength = gen_parameters['strength'];
+  }
+  var cfg = 7.5
+  if(gen_parameters['cfg']!==undefined){
+    cfg = gen_parameters['cfg'];
+  }
+  var pipe = 'img2img'
+  if(gen_parameters['pipe']!==undefined){
+    pipe = gen_parameters['pipe'];
+  }
+  var seed = undefined
+  if(gen_parameters['seed']!==undefined){
+    seed = gen_parameters['seed'];
+  }
+  var steps = 16
+  if(gen_parameters['steps']!==undefined){
+    steps = gen_parameters['steps'];
+  }
+  var segment = false
+  if(gen_parameters['segment']!==undefined){
+    segment = gen_parameters['segment'];
+  }
+  if(!endpoint.endsWith('/')){
+    endpoint = endpoint + '/';
+  }
+  var response = await fetch(endpoint+'img2img', {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
       'init_img': imgdata,
+      'first_frame': first_frame,
       'prompt': prompt,
       'negative_prompt': negative_prompt,
       'prompt_weights': prompt_weights,
@@ -57,7 +119,8 @@ p5.prototype.generate = async function(pInst, endpoint, g, target, prompt, negat
       'cfg': cfg,
       'seed': seed,
       'steps': steps,
-      'segment': segment
+      'segment': segment,
+      'pipe': pipe
     })
   });
   var data = await response.json();
