@@ -14,7 +14,7 @@
         pg.noStroke()
       }
       async function draw() {
-        background(255);
+        // background(255);
         
         var width = 256+ time/totframes*256
         var weight = time/totframes
@@ -32,12 +32,13 @@
             negative_prompt: ['low quality, blurry'],
             prompt_weights: [1-weight, weight],
             negative_prompt_weights: [1],
-            strength: 0.9, 
+            strength: 0.9,
             cfg: 12,
-            seed: 99
+            seed: 99, 
+            segment: true,
           },
           {'target':this, 'x': 256-width/2, 'y':256-width/2, 'width': width, 'height': width}, 
-          export_frame='test'+str(time)
+
         )
         time += 1
       }

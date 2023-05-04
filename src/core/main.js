@@ -372,8 +372,8 @@ class p5 {
     };
 
     this._draw = async () => {
-        if(this._targetFrameRate!==0){
-          const now = window.performance.now();
+      if(this._targetFrameRate!==0){
+        const now = window.performance.now();
         const time_since_last = now - this._lastTargetFrameTime;
         const target_time_between_frames = 1000 / this._targetFrameRate;
 
@@ -424,36 +424,32 @@ class p5 {
             this._requestAnimId = window.requestAnimationFrame(this._draw);
           }
         }
-
-        
       }else{
-          //mandatory update values(matrixes and stack)
-          // this.deltaTime = now - this._lastRealFrameTime;
-          // this._setProperty('deltaTime', this.deltaTime);
-          // this._frameRate = 1000.0 / this.deltaTime;
-          await this.redraw();
-          // this._lastTargetFrameTime = Math.max(this._lastTargetFrameTime
-          //   + target_time_between_frames, now);
-          // this._lastRealFrameTime = now;
+        //mandatory update values(matrixes and stack)
+        // this.deltaTime = now - this._lastRealFrameTime;
+        // this._setProperty('deltaTime', this.deltaTime);
+        // this._frameRate = 1000.0 / this.deltaTime;
+        await this.redraw();
+        // this._lastTargetFrameTime = Math.max(this._lastTargetFrameTime
+        //   + target_time_between_frames, now);
+        // this._lastRealFrameTime = now;
 
-          // If the user is actually using mouse module, then update
-          // coordinates, otherwise skip. We can test this by simply
-          // checking if any of the mouse functions are available or not.
-          // NOTE : This reflects only in complete build or modular build.
-          if (typeof this._updateMouseCoords !== 'undefined') {
-            this._updateMouseCoords();
-
-            //reset delta values so they reset even if there is no mouse event to set them
-            // for example if the mouse is outside the screen
-            this._setProperty('movedX', 0);
-            this._setProperty('movedY', 0);
-          }
+        // If the user is actually using mouse module, then update
+        // coordinates, otherwise skip. We can test this by simply
+        // checking if any of the mouse functions are available or not.
+        // NOTE : This reflects only in complete build or modular build.
+        if (typeof this._updateMouseCoords !== 'undefined') {
+          this._updateMouseCoords();
+          //reset delta values so they reset even if there is no mouse event to set them
+          // for example if the mouse is outside the screen
+          this._setProperty('movedX', 0);
+          this._setProperty('movedY', 0);
+        }
 
         if (this._loop) {
           this._requestAnimId = window.requestAnimationFrame(this._draw);
         }
       }
-      
     };
 
     this._setProperty = (prop, value) => {

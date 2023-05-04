@@ -22,7 +22,7 @@ Recommend to run with a high memory instance.
 
 First, in the top directory, run `http-server` to run a very simple server to host html files in local host. 
 
-Second, in the `test` directory, you can try to add some test html files to test-run generative p5.js. You can try to take a look at one of the `test_gen_*.html` files for an example. 
+Second, in the `test` directory, you can try to add some test html files to test-run generative p5.js. You can try to take a look at one of the `test_gen_*.html` files for an example. (Please use **firefox** when opening html file through local host)
 
 Third, to use the built p5 file, you would need to include the generated `p5-test.js` script into your html.
 
@@ -54,7 +54,7 @@ Generate function takes four five arguments.
   - `negative_prompt_weights`: When there are multiple prompts for `negative_prompt` variable, you can pass weights to control weights with float values. Match the number of prompts to the number of weight variables. (default: `[]`)
   - `strength`: When using Img2Img, you can specify the strength in a float value between 0 to 1. If you do not want to do Img2Img, do not specify this value. (default: `undefined`)
   - `cfg`: This is a variable that decides the how closely the generated image would follow the specified prompt. (default: `7.5`)
-  - `pipe`: When you want to use controlNet, pass controlNet name. Currently supported controlNet models are ``
+  - `pipe`: When you want to use controlNet, pass controlNet name. Currently supported controlNet models are `canny`, `lineart`, `scribble`, `normal`, and `depth`.
   - `segment`: Whether or not to segment the result. If this is not passed, the generated image would have background. (default: `false`)
   - `is_animation`: To generate frame consistent animation, set this value to `true`. When generating animation, please note about `is_first_frame` below. (default: `false`)
   - `is_first_frame`: When `is_animation` is set to true, the first frame should be indicated to the `generate` function. (default: `fault`)

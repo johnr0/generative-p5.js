@@ -18,7 +18,6 @@
       // DO NOT FORGET TO ADD THE AWAIT KEYWORD
       async function draw() {
         // draw bars
-        background(255);
         pg.clear()
         pg.rect(100, 260-time*2, 30, 512-260+time*2)
         pg.rect(160, 300-time*2, 30, 512-300+time*2)
@@ -35,7 +34,7 @@
 
         // Draw the vanilla p5 image
         // image(pg, 0, 0)
-        
+
         // Generate the image
         await generate(this, endpoint, pg, 
           {
@@ -43,7 +42,7 @@
             negative_prompt: 'low quality, blurry', 
             cfg: 12, 
             pipe: 'controlnet_canny', 
-            seed: 19, 
+            seed: 87, 
             is_first_frame: is_first_frame,
             is_animation: true,
           },
