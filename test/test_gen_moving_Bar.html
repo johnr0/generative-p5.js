@@ -1,0 +1,62 @@
+<html>
+  <head>
+    <script src="../lib/p5-test.js"></script>
+    <script>
+      let framerate = 30;
+      let endpoint = 'http://e623-34-80-200-188.ngrok-free.app/'
+      let time = 0
+      function setup() {
+        createCanvas(512, 512);
+        noStroke();
+        frameRate(30);
+        pg = createGraphics(512, 512);
+        pg.fill(color(102, 58, 40))
+        
+        pg.noStroke()
+      }
+
+      // DO NOT FORGET TO ADD THE AWAIT KEYWORD
+      async function draw() {
+        // draw bars
+        // clear()
+        pg.clear()
+        pg.rect(100+time*5, 26, 120, 55)
+        pg.rect(120+time*5,130, 120, 55)
+        pg.rect(80+time*5,240, 120, 55)
+        pg.rect(170+time*5,350, 120, 55)
+        pg.rect(17+time*5,460, 120, 55)
+        
+
+        // Check if this is the first frame or not
+        if(time == 0 ){
+          is_first_frame = true
+        } else {
+          is_first_frame = false
+        }
+
+        // Draw the vanilla p5 image
+        // image(pg, 0, 0)
+
+        // Generate the image
+        await generate(this, endpoint, pg, 
+          {
+            prompt: 'complex action painting styled vine patterns, aesthetic, chaotic', 
+            negative_prompt: 'low quality, blurry', 
+            cfg: 12, 
+            pipe: 'controlnet_canny', 
+            seed: 12394,
+            steps: 20, 
+            is_first_frame: is_first_frame,
+            is_animation: true,
+          },
+          {'target':this, 'x': 0, 'y':0, 'width': 512, 'height': 512}, 'movingtest'+str(time))
+
+        time += 1
+      }
+    </script>
+  </head>
+  <body>
+    <main>
+    </main>
+  </body>
+</html>
